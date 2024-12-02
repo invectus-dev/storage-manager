@@ -4,11 +4,17 @@
         <div class="w-full p-6 mx-auto bg-white rounded-lg shadow-lg max-w-7xl">
             <h2 class="mb-6 text-3xl font-semibold text-center text-gray-800">Dashboard</h2>
 
+            <!-- Search Form -->
+            <form method="GET" action="{{ route('dashboard') }}" class="mb-6">
+                <input type="text" name="search" value="{{ request('search') }}"
+                    class="w-full input input-bordered sm:w-1/2" placeholder="Search by product name..." />
+                <button type="submit" class="mt-2 btn btn-primary">Search</button>
+            </form>
+
             <!-- Product List Section -->
             <div class="mb-8">
                 <h3 class="mb-4 text-xl font-medium text-gray-700">Uploaded Products</h3>
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    <!-- Loop through the uploaded products -->
                     @foreach ($produk as $item)
                         <div class="p-4 bg-white rounded-lg shadow-lg">
                             <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name_produk }}"
@@ -20,9 +26,18 @@
                                     {{ number_format($item->harga_produk, 0, ',', '.') }}</span>
                                 <span class="text-sm text-gray-500">{{ $item->stock_produk }} in stock</span>
                             </div>
+
+                            <!-- Edit and Delete Buttons -->
+                            <div class="flex justify-between mt-4">
+                                <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ route('produk.delete', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </div>
                         </div>
                     @endforeach
-
                 </div>
             </div>
 
